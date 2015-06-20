@@ -1,0 +1,60 @@
+<div class=col-md-10>
+  <div class="btn-group" role="group" aria-label="...">
+    <button ng-click="new()" type="button" class="btn btn-default">New</button>
+    <button ng-click="edit()" type="button" class="btn btn-default">Edit</button>
+    <button ng-click="save()" ng-disabled="!blogIsDirty" type="button" class="btn btn-default">Save</button>
+    <button ng-click="cancel()" ng-disabled="!blogIsDirty" type="button" class="btn btn-default">Cancel</button>
+  </div>    
+    <form>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Title</label>
+        <input ng-disabled="mode !== 'edit'" type="text" ng-model='blogDetails.Title' class="form-control" id="Title" placeholder="Blog title">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Sub-title</label>
+        <textarea ng-disabled="mode !== 'edit'" class="form-control" rows="3" placeholder='Sub title'  ng-model='blogDetails.SubTitle'></textarea>
+      </div>
+      <div class="form-group">
+        <div class=row>
+          <div class=col-md-9>
+            <label for="exampleInputPassword1">Blog</label>
+            <textarea ng-disabled="mode !== 'edit'" class="form-control" rows="18" placeholder='Blog' ng-model='blogDetails.Blog'></textarea>
+          </div>
+          <div class=col-md-3>
+            <div class=row>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Categories</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="checkbox" ng-repeat="category in categoryList"><label><input ng-disabled="mode !== 'edit'" type="checkbox"ng-model="selectedCategories.ids[category.ID]"> {{category.Title}}</label></div>
+                </div>
+              </div>
+            </div>
+            <div class=row>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Blog types</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="checkbox" ng-repeat="blogType in typeList"><label><input ng-disabled="mode !== 'edit'" type="checkbox"ng-model="selectedTypes.ids[blogType.ID]"> {{blogType.Name}}</label></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="alert alert-danger alert-dismissible fade in" role="alert" ng-show='showdirtyalert'>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+          <h4 id="oh-snap!-you-got-an-error!">Oh snap! You've got unsaved changes in this blog!<a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a></h4>
+          <p>Either click on the Save button to save these changes or click the Cancel button to discard the changes.</p>
+          <p>
+            <button ng-click="save()" type="button" class="btn btn-success">Save</button>
+            <button ng-click="cancel()" type="button" class="btn btn-danger">Cancel</button>
+          </p>
+    </div>
+  </div>
+
+
+
