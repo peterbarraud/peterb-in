@@ -16,16 +16,24 @@ angular.module('peterbdotin')
       isEmptyString: function(str) {
         return angular.isUndefined(str) || str ==='';
       },
-      scrollTo: function (scrollElement) {
-        var anchor = angular.element(scrollElement);
-    		if(anchor)
-    		{
-          var container = angular.element(anchor.parent());
-          var top = container.offset().top;
-          //first reset the container
-          container.scrollTop(0);
-          container.scrollTop(anchor.position().top - top - 50);
-    		}
+      httpPost: function(paramsObject,http,url) {
+        var httpPostParams = [];
+        for (var key in paramsObject) {
+          httpPostParams.push(key + '=' + encodeURIComponent(paramsObject[key]));
+        }
+        httpPostParams = httpPostParams.join('&');
+        http({
+          method: 'POST',
+          url: url,
+          data: httpPostParams,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).
+        success(function(data, status, headers, config) {
+          console.log(data);
+        }).
+        error(function(data, status, headers, config) {
+          console.log(data);
+        });
       },
     };
   });

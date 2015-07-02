@@ -1,11 +1,11 @@
-<div class=col-md-10>
+<div class=col-md-9>
   <div class="btn-group" role="group" aria-label="...">
     <button ng-click="new()" type="button" class="btn btn-default">New</button>
     <button ng-click="edit()" type="button" class="btn btn-default">Edit</button>
-    <button ng-click="save()" ng-disabled="!blogIsDirty" type="button" class="btn btn-default">Save</button>
-    <button ng-click="cancel()" ng-disabled="!blogIsDirty" type="button" class="btn btn-default">Cancel</button>
+    <button ng-click="save()" ng-disabled="!BlogIsDirty" type="button" class="btn btn-default">Save</button>
+    <button ng-click="cancel()" ng-disabled="!BlogIsDirty" type="button" class="btn btn-default">Cancel</button>
   </div>    
-    <form>
+    <form name="frm">
       <div class="form-group">
         <label for="exampleInputEmail1">Title</label>
         <input ng-disabled="mode !== 'edit'" type="text" ng-model='blogDetails.Title' class="form-control" id="Title" placeholder="Blog title">
@@ -18,7 +18,14 @@
         <div class=row>
           <div class=col-md-9>
             <label for="exampleInputPassword1">Blog</label>
-            <textarea ng-disabled="mode !== 'edit'" class="form-control" rows="18" placeholder='Blog' ng-model='blogDetails.Blog'></textarea>
+            <div ng-cloak ng-hide="ckeditorIsReady" class="highlight">Initialising ...</div>
+
+            <div ng-cloak ng-show="mode !== 'edit'">
+              <div>Click Edit to view the Blog</div>
+            </div>
+            <div ng-cloak ng-show="mode === 'edit'">
+              <textarea ckeditor="editorOptions" name="editor" ng-model="blogDetails.Blog"></textarea>
+            </div>
           </div>
           <div class=col-md-3>
             <div class=row>
@@ -27,7 +34,7 @@
                   <h3 class="panel-title">Categories</h3>
                 </div>
                 <div class="panel-body">
-                  <div class="checkbox" ng-repeat="category in categoryList"><label><input ng-disabled="mode !== 'edit'" type="checkbox"ng-model="selectedCategories.ids[category.ID]"> {{category.Title}}</label></div>
+                  <div class="checkbox" ng-click='checkListIem(category.ID)' ng-repeat="category in categoryList"><label><input ng-disabled="mode !== 'edit'" type="checkbox"ng-model="selectedCategories.ids[category.ID]"> {{category.Title}}</label></div>
                 </div>
               </div>
             </div>
@@ -37,7 +44,7 @@
                   <h3 class="panel-title">Blog types</h3>
                 </div>
                 <div class="panel-body">
-                  <div class="checkbox" ng-repeat="blogType in typeList"><label><input ng-disabled="mode !== 'edit'" type="checkbox"ng-model="selectedTypes.ids[blogType.ID]"> {{blogType.Name}}</label></div>
+                  <div class="checkbox" ng-click='checkListIem(blogType.ID)' ng-repeat="blogType in typeList"><label><input ng-disabled="mode !== 'edit'" type="checkbox"ng-model="selectedTypes.ids[blogType.ID]"> {{blogType.Name}}</label></div>
                 </div>
               </div>
             </div>

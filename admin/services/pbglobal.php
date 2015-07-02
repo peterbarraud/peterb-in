@@ -4,8 +4,13 @@ class GlobalFactory {
 	{
 		$retval = null;
 		$select_sql = "SELECT id FROM pbglobal";
+		$GLOBALS['mysqli']->query($select_sql);
 		if ($result = $GLOBALS['mysqli']->query($select_sql)) {
 			$retval = new PbGlobal($result->fetch_assoc()['id']);
+		}
+		else {
+			glogg('something happened:' . $GLOBALS['mysqli']->error);
+			glogg($insert_sql);
 		}
 		return $retval;
 	}	

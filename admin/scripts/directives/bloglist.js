@@ -17,6 +17,9 @@ angular.module('peterbdotin')
             if (currentBlogID === scope.selectedBlogId)
               return "active";
           }
+          scope.refreshList = function () {
+            serverFactory.getallblogs(scope);
+          }
         }
     };
   });

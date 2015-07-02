@@ -93,14 +93,27 @@
 		require_once 'posttype.php';
 		require_once 'userresponse.php';
 		require_once 'userreply.php';
+		$GLOBALS['mysqli'] = MySQLConnection::Open();
 		if ($postid > 0) {  //get a new post object
-		  $retval = PostFactory::NewPost();
+  		$retval = PostFactory::GetPost($postid);
 		}
 		else {
-			$GLOBALS['mysqli'] = MySQLConnection::Open();
-  		$retval = PostFactory::GetPost($postid);
-  		MySQLConnection::Close($GLOBALS['mysqli']);
+		  $retval = PostFactory::NewPost();
 	  }
+		MySQLConnection::Close($GLOBALS['mysqli']);
+  	echo json_encode($retval);
+	});
+	
+	$app->get('/getallposts',function() {
+		require_once 'common/dbconnection.php';
+		require_once 'category.php';
+		require_once 'post.php';
+		require_once 'posttype.php';
+		require_once 'userresponse.php';
+		require_once 'userreply.php';
+		$GLOBALS['mysqli'] = MySQLConnection::Open();
+		$retval = PostFactory::GetAllPosts();
+		MySQLConnection::Close($GLOBALS['mysqli']);
   	echo json_encode($retval);
 	});
 
@@ -118,46 +131,22 @@
 		MySQLConnection::Close($GLOBALS['mysqli']);
 		echo json_encode($ret_val);	
 	});
-	$app->post('/savepost/:postid',function($postid) use ($app) {
+	
+	$app->post('/savepost',function() use ($app) {
 		require_once 'common/dbconnection.php';
+		require_once 'common/common.php';
 		require_once 'category.php';
 		require_once 'post.php';
 		require_once 'posttype.php';
 		require_once 'userresponse.php';
 		require_once 'userreply.php';
 		$GLOBALS['mysqli'] = MySQLConnection::Open();
-		//first turn off auto-commit
-		//$GLOBALS['mysqli']->autocommit(FALSE);
-		$blogPost = $postid > 0 ? PostFactory::GetPost($postid) : PostFactory::NewPost();
-		$blogPost->Title = $app->request->post('title');
-		$blogPost->SubTitle = $app->request->post('subtitle');
-		$blogPost->PageName = $app->request->post('pagename');
-		$blogPost->Blog = $app->request->post('blogpost');
-		$blogPost->ReadyForPublish = $app->request->post('readtopublish') == 1 ? TRUE : FALSE;
-		//for now let's do a simple remove all categories and add again
-		//TODO - do an intelligent "if exisits"
-		foreach ($blogPost->Categories as $category) {
-			$blogPost->RemoveCategory($category->ID);
-		}
-		if ($app->request->post('blogcategories')) {
-			foreach ($app->request->post('blogcategories') as $categoryid) {
-				$blogPost->AddCategory($categoryid);
-			}
-		}
-		if ($app->request->post('blogtypes')) {
-			foreach ($app->request->post('blogtypes') as $typeid) {
-				$blogPost->AddType($typeid);
-			}
-		}
-		$blogPost->Save();
-		//then manually commit
-		//$GLOBALS['mysqli']->commit();
-		//or rollback
-		//$GLOBALS['mysqli']->rollback();
-		$ret_val['newpostid'] = $blogPost->ID;
-		$ret_val['success'] = $postid > 0 ? 'Blog post updated' : 'New blog post created';
+	  $blogObject = castObject(json_decode($app->request->post('blogObject')),'Post');
+	  $blogObject->Save();
+	  $retval = array();
+	  $retval['savedblogid'] = $blogObject->ID;
 		MySQLConnection::Close($GLOBALS['mysqli']);
-		echo json_encode($ret_val);	
+	  echo json_encode($retval);	
 	});
 	
 	//is this required - let's leave it for now
