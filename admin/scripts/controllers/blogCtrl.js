@@ -32,6 +32,7 @@ angular.module('peterbdotin').controller('blogCtrl', function ($rootScope, $scop
   //get the category list
   serverFactory.getcategorylist($scope);
   serverFactory.gettypelist($scope);
+  serverFactory.gettypelist($scope);
 
   
 });

@@ -32,18 +32,18 @@ angular.module('peterbdotin')
           //it does not do things like edit the current blog or stuff like that
           scope.edit = function () {
             if (scope.selectedBlogId !== 0) {
+              scope.blogIsDirty = false;
               scope.mode = 'edit';
             }
               //get an empty object
           }
           scope.new = function () {
             scope.setSelectedBlogId(-1);
+            scope.blogIsDirty = false;
             scope.mode = 'edit';
           }
           
           scope.save = function() {
-            //first lets clear out the current blog categories array
-            scope.blogDetails.Categories.length = 0;
             //iterate the list of selected categories and add them to the blogDetails object Categories array
             for (var selectedCategoryID in scope.selectedCategories.ids) {
               if (scope.selectedCategories.ids[selectedCategoryID]){
@@ -55,7 +55,7 @@ angular.module('peterbdotin')
               }
               
             }
-            serverFactory.saveblogdetails(scope.blogDetails);
+            serverFactory.saveblogdetails(scope);
           }
           scope.setListItemModel = function(listitemID) {
             console.log(listitemID);
