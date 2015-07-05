@@ -22,6 +22,7 @@ def ftpchangedfiles(ftpdirlist,ftpserver,ftpusername,ftppwd) :
 				ftp.storlines('STOR ' + filename, ftpfile)
 				error_msg = 'ftp.close failed for read:- ' + filename
 				ftpfile.close()
+				print 'FTP successful: ' + filename
 			except Exception:
 				print 'FTP failed: ' + error_msg
 			print "=================****================="
