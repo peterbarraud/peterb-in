@@ -10,11 +10,18 @@ def ftpchangedfiles(ftpdirlist,ftpserver,ftpusername,ftppwd) :
 		localdir = dirname.replace('\\','/') #local dir from where to get file
 		for filename in filelist :
 			print 'ftp file: ' + filename
-			ftp.cwd(ftpdir)	#ftp dir to put file
-			os.chdir(localdir)
-			ftpfile = open(filename, 'r')
-			ftp.storlines('STOR ' + filename, ftpfile)
-			ftpfile.close()
+			error_msg = ''
+			try :
+				error_msg = 'unable to find local file to FTP'
+				ftp.cwd(ftpdir)	#ftp dir to put file
+				error_msg = 'unable to find remote FTP directory'
+				os.chdir(localdir)
+				error_msg = 'unable to open file for read'
+				ftpfile = open(filename, 'r')
+				ftp.storlines('STOR ' + filename, ftpfile)
+				ftpfile.close()
+			except Exception:
+				print 'FTP failed: ' + error_msg
 	ftp.close()
 
 def getftpfilelist (timekeeper,sitedir) :
