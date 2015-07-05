@@ -12,9 +12,9 @@ def ftpchangedfiles(ftpdirlist,ftpserver,ftpusername,ftppwd) :
 			print 'ftp file: ' + filename
 			error_msg = ''
 			try :
-				error_msg = 'unable to find local file to FTP'
-				ftp.cwd(ftpdir)	#ftp dir to put file
 				error_msg = 'unable to find remote FTP directory'
+				ftp.cwd(ftpdir)	#ftp dir to put file
+				error_msg = 'unable to find local file to FTP'
 				os.chdir(localdir)
 				error_msg = 'unable to open file for read'
 				ftpfile = open(filename, 'r')
