@@ -22,6 +22,7 @@ def ftpchangedfiles(ftpdirlist,ftpserver,ftpusername,ftppwd) :
 				ftpfile.close()
 			except Exception:
 				print 'FTP failed: ' + error_msg
+			print "=================****================="
 	ftp.close()
 
 def getftpfilelist (timekeeper,sitedir) :
