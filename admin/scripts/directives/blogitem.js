@@ -49,38 +49,66 @@ angular.module('peterbdotin')
             scope.BlogIsDirty = false;
             scope.mode = 'edit';
           }
-          
+
+          scope.publish = function() {
+            var errors = new Array();
+            //to publish blog must have either a subtitle or a blog
+            if (util.isEmptyString(scope.blogDetails.SubTitle) && util.isEmptyString(scope.blogDetails.Blog)) {
+              errors.push('To publish a blog needs at least either a sub-title or a Blog');
+            }
+            if (scope.blogDetails.Categories.length === 0) {
+              errors.push('To publish a blog must be part of at least one category');
+            }
+            if (scope.blogDetails.PublishDate !== null && scope.blogDetails.ModifiedDate <= scope.blogDetails.PublishDate) {
+              errors.push("It appears that this blog has already been published. And you've not made any changes since.");
+            }
+            if (errors.length) {
+              console.log(errors)
+              var finalmsg = '';
+              errors.forEach (function(errmsg) {
+                finalmsg += "\n" + errmsg;              })
+              alert(finalmsg);
+            }
+            else {
+              serverFactory.publishblog(scope.selectedBlogId);
+            }
+          }
           scope.checkListIem = function (listItemID) {
             scope.BlogIsDirty = true;
           }
           scope.save = function() {
-            //CATEGORIES
-            //clear the current blog categories list
-            scope.blogDetails.Categories = [];
-            //iterate the list of selected categories and add them to the blogDetails object Categories array
-            angular.forEach (scope.selectedCategories.ids, function(isaddcategory,selectedCategoryID){
-              if (isaddcategory) {
-                scope.categoryList.forEach (function (category) {
-                  if (category.ID === selectedCategoryID) {
-                    scope.blogDetails.Categories.push(category);
-                  }
-                });
-              }
-            });
-            //TYPES
-            //clear the current blog categories list
-            scope.blogDetails.Types = [];
-            //iterate the list of selected categories and add them to the blogDetails object Categories array
-            angular.forEach (scope.selectedTypes.ids, function(isaddtype,selectedTypeID){
-              if (isaddtype) {
-                scope.typeList.forEach (function (blogType) {
-                  if (blogType.ID === selectedTypeID) {
-                    scope.blogDetails.Types.push(blogType);
-                  }
-                });
-              }
-            });
-            serverFactory.saveblogdetails(scope);
+            if (!util.isEmptyString(scope.blogDetails.Title)) { //you'll need at least a title to save a blog
+              //CATEGORIES
+              //clear the current blog categories list
+              scope.blogDetails.Categories = [];
+              //iterate the list of selected categories and add them to the blogDetails object Categories array
+              angular.forEach (scope.selectedCategories.ids, function(isaddcategory,selectedCategoryID){
+                if (isaddcategory) {
+                  scope.categoryList.forEach (function (category) {
+                    if (category.ID === selectedCategoryID) {
+                      scope.blogDetails.Categories.push(category);
+                    }
+                  });
+                }
+              });
+              //TYPES
+              //clear the current blog categories list
+              scope.blogDetails.Types = [];
+              //iterate the list of selected categories and add them to the blogDetails object Categories array
+              angular.forEach (scope.selectedTypes.ids, function(isaddtype,selectedTypeID){
+                if (isaddtype) {
+                  scope.typeList.forEach (function (blogType) {
+                    if (blogType.ID === selectedTypeID) {
+                      scope.blogDetails.Types.push(blogType);
+                    }
+                  });
+                }
+              });
+              serverFactory.saveblogdetails(scope);
+            }
+            else {
+              alert("The blog will at least need a title for me to save it.")
+            }
           }
 
           //we're checking for dirty blog details

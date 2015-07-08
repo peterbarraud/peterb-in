@@ -87,6 +87,18 @@ angular.module('peterbdotin')
           });        
       },
       
+      publishblog : function (blogId) {
+        $http.get('services/pbrest.php/publishpost/' + blogId).
+          success(function(data, status, headers, config) {
+            console.log(data);
+          }).
+          error(function(data, status, headers, config) {
+            console.log(data);
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+          });        
+      },
+      
       saveblogdetails : function(scope) {
         var paramsObject = {blogObject:JSON.stringify(scope.blogDetails)};
         var httpPostParams = [];

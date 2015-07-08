@@ -14,7 +14,7 @@ angular.module('peterbdotin')
         return Array.isArray(arrOrObj) ? arrOrObj.length : Object.keys(arrOrObj).length;
       },
       isEmptyString: function(str) {
-        return angular.isUndefined(str) || str ==='';
+        return angular.isUndefined(str) || str ==='' || str === null;
       },
       httpPost: function(paramsObject,http,url) {
         var httpPostParams = [];

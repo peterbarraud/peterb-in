@@ -462,6 +462,7 @@ class Post {
 		//OR
 		//if the post is explicitly set to ReadyForPublish
 		if ($this->ModifiedDate > $this->PublishDate || $this->ReadyForPublish) {
+		  file_put_contents("blum",1);
 			$file_contents_string = file_get_contents($this->TemplateFolder . $this->TemplateName);
 			$file_contents_string = str_replace("<blog-post-title>",$this->Title,$file_contents_string);
 			$file_contents_string = str_replace("<blog-post-post>",Post::setupforbootstrap($this->Blog),$file_contents_string);

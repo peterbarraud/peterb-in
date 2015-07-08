@@ -2,31 +2,35 @@ import ftplib
 import os
 
 def ftpchangedfiles(ftpdirlist,ftpserver,ftpusername,ftppwd) :
-	ftp = ftplib.FTP(ftpserver)
-	ftp.login(ftpusername, ftppwd)
-	for dirname,filelist in ftpdirlist.iteritems() :
-		ftpdir = dirname.replace(sitedir,'')
-		ftpdir = ftpdir.replace('\\','/')
-		localdir = dirname.replace('\\','/') #local dir from where to get file
-		for filename in filelist :
-			print 'ftp file: ' + filename
-			error_msg = ''
-			try :
-				error_msg = 'unable to find remote FTP directory:- ' + ftpdir
-				ftp.cwd(ftpdir)	#ftp dir to put file
-				error_msg = 'unable to find local file to FTP:- ' + localdir
-				os.chdir(localdir)
-				error_msg = 'unable to open file for read:- ' + filename
-				ftpfile = open(filename, 'r')
-				error_msg = 'storlines failed for read:- ' + filename
-				ftp.storlines('STOR ' + filename, ftpfile)
-				error_msg = 'ftp.close failed for read:- ' + filename
-				ftpfile.close()
-				print 'FTP successful: ' + filename
-			except Exception:
-				print 'FTP failed: ' + error_msg
-			print "=================****================="
-	ftp.close()
+	try :
+		ftp = ftplib.FTP(ftpserver)
+		ftp.login(ftpusername, ftppwd)
+		for dirname,filelist in ftpdirlist.iteritems() :
+			ftpdir = dirname.replace(sitedir,'')
+			ftpdir = ftpdir.replace('\\','/')
+			localdir = dirname.replace('\\','/') #local dir from where to get file
+			for filename in filelist :
+				print 'ftp file: ' + filename
+				error_msg = ''
+				try :
+					error_msg = 'unable to find remote FTP directory:- ' + ftpdir
+					ftp.cwd(ftpdir)	#ftp dir to put file
+					error_msg = 'unable to find local file to FTP:- ' + localdir
+					os.chdir(localdir)
+					error_msg = 'unable to open file for read:- ' + filename
+					ftpfile = open(filename, 'r')
+					error_msg = 'storlines failed for read:- ' + filename
+					ftp.storlines('STOR ' + filename, ftpfile)
+					error_msg = 'ftp.close failed for read:- ' + filename
+					ftpfile.close()
+					print 'FTP successful: ' + filename
+				except Exception:
+					print 'FTP failed: ' + error_msg
+				print "=================****================="
+		ftp.close()
+	except :
+		print "Unable to connect to the FTP server:- " + ftpserver
+		print "Ensure your network connection is right"
 
 def getftpfilelist (timekeeper,sitedir) :
 	lastftptime = 0
