@@ -10,20 +10,24 @@ def ftpchangedfiles(ftpdirlist,ftpserver,ftpusername,ftppwd) :
 			ftpdir = ftpdir.replace('\\','/')
 			localdir = dirname.replace('\\','/') #local dir from where to get file
 			for filename in filelist :
-				print 'ftp file: ' + filename
 				error_msg = ''
 				try :
-					error_msg = 'unable to find remote FTP directory:- ' + ftpdir
-					ftp.cwd(ftpdir)	#ftp dir to put file
-					error_msg = 'unable to find local file to FTP:- ' + localdir
-					os.chdir(localdir)
-					error_msg = 'unable to open file for read:- ' + filename
-					ftpfile = open(filename, 'r')
-					error_msg = 'storlines failed for read:- ' + filename
-					ftp.storlines('STOR ' + filename, ftpfile)
-					error_msg = 'ftp.close failed for read:- ' + filename
-					ftpfile.close()
-					print 'FTP successful: ' + filename
+					#a completely SPECIFIC condition: exclude all git folders
+					if ftpdir != '/.git' :
+						print 'ftp file: ' + filename
+						error_msg = 'unable to find remote FTP directory:- ' + ftpdir
+						ftp.cwd(ftpdir)	#ftp dir to put file
+						error_msg = 'unable to find local file to FTP:- ' + localdir
+						os.chdir(localdir)
+						error_msg = 'unable to open file for read:- ' + filename
+						ftpfile = open(filename, 'r')
+						error_msg = 'storlines failed for read:- ' + filename
+						ftp.storlines('STOR ' + filename, ftpfile)
+						error_msg = 'ftp.close failed for read:- ' + filename
+						ftpfile.close()
+						print 'FTP successful: ' + filename
+					#else :
+						#print 'We are NOT uploading git to the FTP'
 				except Exception:
 					print 'FTP failed: ' + error_msg
 				print "=================****================="
