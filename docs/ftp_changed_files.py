@@ -13,7 +13,7 @@ def ftpchangedfiles(ftpdirlist,ftpserver,ftpusername,ftppwd) :
 				error_msg = ''
 				try :
 					#a completely SPECIFIC condition: exclude all git folders
-					if ftpdir != '/.git' :
+					if ftpdir.startswith('/.git') == False :
 						print 'ftp file: ' + filename
 						error_msg = 'unable to find remote FTP directory:- ' + ftpdir
 						ftp.cwd(ftpdir)	#ftp dir to put file
