@@ -10,27 +10,27 @@ def ftpchangedfiles(ftpdirlist,ftpserver,ftpusername,ftppwd) :
 			ftpdir = ftpdir.replace('\\','/')
 			localdir = dirname.replace('\\','/') #local dir from where to get file
 			for filename in filelist :
+				#a completely SPECIFIC condition: exclude all git folders
+				if ftpdir.startswith('/.git') == False :
+					try :
+							print 'ftp file: ' + filename
+							error_msg = 'unable to find remote FTP directory:- ' + ftpdir
+							ftp.cwd(ftpdir)	#ftp dir to put file
+							error_msg = 'unable to find local file to FTP:- ' + localdir
+							os.chdir(localdir)
+							error_msg = 'unable to open file for read:- ' + filename
+							ftpfile = open(filename, 'r')
+							error_msg = 'storlines failed for read:- ' + filename
+							ftp.storlines('STOR ' + filename, ftpfile)
+							error_msg = 'ftp.close failed for read:- ' + filename
+							ftpfile.close()
+							print 'FTP successful: ' + filename
+					except Exception:
+						print 'FTP failed: ' + error_msg
+					print "=================****================="
+				#else :
+					#print 'We are NOT uploading git to the FTP'
 				error_msg = ''
-				try :
-					#a completely SPECIFIC condition: exclude all git folders
-					if ftpdir.startswith('/.git') == False :
-						print 'ftp file: ' + filename
-						error_msg = 'unable to find remote FTP directory:- ' + ftpdir
-						ftp.cwd(ftpdir)	#ftp dir to put file
-						error_msg = 'unable to find local file to FTP:- ' + localdir
-						os.chdir(localdir)
-						error_msg = 'unable to open file for read:- ' + filename
-						ftpfile = open(filename, 'r')
-						error_msg = 'storlines failed for read:- ' + filename
-						ftp.storlines('STOR ' + filename, ftpfile)
-						error_msg = 'ftp.close failed for read:- ' + filename
-						ftpfile.close()
-						print 'FTP successful: ' + filename
-					#else :
-						#print 'We are NOT uploading git to the FTP'
-				except Exception:
-					print 'FTP failed: ' + error_msg
-				print "=================****================="
 		ftp.close()
 	except :
 		print "Unable to connect to the FTP server:- " + ftpserver
