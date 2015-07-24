@@ -26,6 +26,7 @@ angular.module('peterbdotin')
         $http.get('services/pbrest.php/getpost/' + blogId).
           success(function(data, status, headers, config) {
             scope.blogDetails = data;
+            scope.blogDetails_Backup = angular.copy(data);  //use this deep copy in a speccial case when a user cancels out all changes
             //now a HACK to manage ckeditor
             //default the blog to a p tag if ID = 0 (new blog)
             if (scope.blogDetails.ID === 0) {
@@ -55,6 +56,7 @@ angular.module('peterbdotin')
         $http.get('services/pbrest.php/getallposts').
           success(function(data, status, headers, config) {
             scope.bloglist = data;
+            scope.setSelectedBlogId(scope.bloglist[0].ID); 
           }).
           error(function(data, status, headers, config) {
             console.log(data);
@@ -87,10 +89,18 @@ angular.module('peterbdotin')
           });        
       },
       
-      publishblog : function (blogId) {
-        $http.get('services/pbrest.php/publishpost/' + blogId).
+      publishblog : function (scope) {
+        $http.get('services/pbrest.php/publishpost/' + scope.selectedBlogId).
           success(function(data, status, headers, config) {
             console.log(data);
+            if (data.success === 1) {
+              scope.ServerResponse.Message = data.message;
+              scope.ServerResponse.Type ="success";
+            }
+            else {
+              scope.ServerResponse.Message = data.message;
+              scope.ServerResponse.Type ="danger";
+            }
           }).
           error(function(data, status, headers, config) {
             console.log(data);
@@ -116,7 +126,7 @@ angular.module('peterbdotin')
           //if all is good, then let's clean up
           scope.BlogIsDirty = false;
           scope.showdirtyalert = false;
-          scope.mode = 'readonly';
+          //scope.mode = 'readonly';
           scope.setSelectedBlogId(data.savedblogid); 
           //TODO:
           //and then refresh the blog list with the new / updated blog

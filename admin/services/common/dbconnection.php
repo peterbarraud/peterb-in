@@ -16,7 +16,8 @@ class MySQLConnection
 	{
 		$ret_val = array();
 		$dbname = 'pbdotcom';
-		if ($_SERVER['SERVER_NAME'] == 'barraud-w7-1') {
+		file_put_contents('getconnectiondetails','');
+		if ($_SERVER['SERVER_NAME'] == 'localhost') {
 			$ret_val['host'] = 'localhost';
 			$ret_val['username'] = 'root';
 			$ret_val['password'] = '';

@@ -14,6 +14,7 @@ angular.module('peterbdotin')
       replace:true,
       link: function postLink(scope,element, attrs) {
           scope.setActiveBlogItem = function(currentBlogID) {
+            //scope.ServerResponse.Type = null;
             if (currentBlogID === scope.selectedBlogId)
               return "active";
           }

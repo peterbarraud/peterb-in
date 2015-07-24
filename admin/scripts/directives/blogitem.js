@@ -29,48 +29,54 @@ angular.module('peterbdotin')
           
 
           scope.cancel = function () {
+            //TODO - this should revert any changes. Right now it doesn't
+            scope.ServerResponse.Type = null;
             scope.BlogIsDirty = false;
             scope.showdirtyalert = false;
-            scope.mode = 'readonly';
-          }
-          //this function simply sets the mode of the app to edit
-          //it does not do things like edit the current blog or stuff like that
-          scope.edit = function () {
-            if (scope.selectedBlogId !== 0) {
-              scope.BlogIsDirty = false;
-              scope.mode = 'edit';
-            }
-              //get an empty object
+            scope.blogDetails = angular.copy(scope.blogDetails_Backup);
+            //serverFactory.getblogdetails(scope.selectedBlogId,scope);
           }
           scope.new = function () {
+            scope.ServerResponse.Type = null;
             scope.setSelectedBlogId(-1);
             scope.selectedCategories = {ids: {}};
             scope.selectedTypes = {ids: {}};
             scope.BlogIsDirty = false;
-            scope.mode = 'edit';
           }
-
-          scope.publish = function() {
-            var errors = new Array();
-            //to publish blog must have either a subtitle or a blog
-            if (util.isEmptyString(scope.blogDetails.SubTitle) && util.isEmptyString(scope.blogDetails.Blog)) {
-              errors.push('To publish a blog needs at least either a sub-title or a Blog');
-            }
-            if (scope.blogDetails.Categories.length === 0) {
-              errors.push('To publish a blog must be part of at least one category');
-            }
-            if (scope.blogDetails.PublishDate !== null && scope.blogDetails.ModifiedDate <= scope.blogDetails.PublishDate) {
-              errors.push("It appears that this blog has already been published. And you've not made any changes since.");
-            }
-            if (errors.length) {
-              console.log(errors)
-              var finalmsg = '';
-              errors.forEach (function(errmsg) {
-                finalmsg += "\n" + errmsg;              })
-              alert(finalmsg);
+          //to hide the message, set the type to null
+          scope.getresponsemessagetype = function() {
+            if (scope.ServerResponse.Type) {
+              return "alert alert-dismissible alert-" + scope.ServerResponse.Type;
             }
             else {
-              serverFactory.publishblog(scope.selectedBlogId);
+              return "hide";
+            }
+              }
+
+          scope.publish = function() {
+            var errormsg = '';
+            //to publish blog must have a title
+            if (util.isEmptyString(scope.blogDetails.Title)) {
+              errormsg += '<p>To publish a blog needs a title.</p>';
+            }
+            //to publish blog must have either a subtitle or a blog
+            if (util.isEmptyString(scope.blogDetails.SubTitle) && util.isEmptyString(scope.blogDetails.Blog)) {
+              errormsg += '<p>To publish a blog needs at least either a sub-title or a Blog.</p>';
+            }
+            if (scope.blogDetails.Categories.length === 0) {
+              errormsg += '<p>To publish a blog must be part of at least one category.</p>';
+            }
+            //TODO:
+            //for now let's disable this check. makes testing cumbersome
+            if (scope.blogDetails.PublishDate !== null && scope.blogDetails.ModifiedDate <= scope.blogDetails.PublishDate) {
+              errormsg += "<p>It appears that this blog has already been published. And you've not made any changes since.</p>";
+            }
+            if (util.isEmptyString(errormsg) === false) {
+              scope.ServerResponse.Message = errormsg;
+              scope.ServerResponse.Type = 'danger';
+            }
+            else {
+              serverFactory.publishblog(scope);
             }
           }
           scope.checkListIem = function (listItemID) {
@@ -122,8 +128,14 @@ angular.module('peterbdotin')
             if (scope.ckeditorIsReady) {
               if (!angular.isUndefined(old_blogDetails) && !angular.isUndefined(new_blogDetails)) {
                 if (!angular.isUndefined(old_blogDetails.ID) && !angular.isUndefined(new_blogDetails.ID)) {
-                  if (old_blogDetails.ID === new_blogDetails.ID) {
+                  if (old_blogDetails.ID === new_blogDetails.ID) {  //means we havent changed the blog being view but something else has changed
                     if (scope.frm.editor.$dirty) {
+                      scope.BlogIsDirty = true;
+                    }
+                    else if (old_blogDetails.Title !== new_blogDetails.Title) {
+                      scope.BlogIsDirty = true;
+                    }
+                    else if (old_blogDetails.SubTitle !== new_blogDetails.SubTitle) {
                       scope.BlogIsDirty = true;
                     }
                   }

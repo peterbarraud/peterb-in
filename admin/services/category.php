@@ -143,17 +143,23 @@ class Category {
 				$post_row .= '</div>' . "\n";
 				$post_rows .= $post_row;
 			}
+			file_put_contents('category-blog.log',$post_rows);
 			require_once 'pbglobal.php';
 			$globalData = GlobalFactory::GetGlobalData();
 			$file_contents_string = file_get_contents($globalData->TemplateFolder . $globalData->CategoryTemplateName);
-			$file_contents_string = str_replace("<headline-placeholders>",$post_rows,$file_contents_string);
+			//not sure what this does:
+			//$file_contents_string = str_replace("<headline-placeholders>",$post_rows,$file_contents_string);
 			//now let's clean out the template stuff
-			$file_contents_string = str_replace('<category_title>',$this->Title,$file_contents_string);
-			$file_contents_string = str_replace('<category_background_title>',$this->BackgroundTitle,$file_contents_string);
+			$file_contents_string = str_replace('{{category_title}}',$this->Title,$file_contents_string);
+			//not sure what this does:
+			//$file_contents_string = str_replace('<category_background_title>',$this->BackgroundTitle,$file_contents_string);
 			$file_contents_string = str_replace('<category_color>',$this->Color,$file_contents_string);
-			$file_contents_string = str_replace('<category_carousel_title>',$this->CarouselTitle,$file_contents_string);
-			$file_contents_string = str_replace('<category_carousel_subtitle>',$this->CarouselSubTitle,$file_contents_string);
-			$file_contents_string = str_replace('<category_url>',$this->Url,$file_contents_string);
+			$file_contents_string = str_replace('{{category_carousel_title}}',$this->CarouselTitle,$file_contents_string);
+			$file_contents_string = str_replace('{{category_carousel_subtitle}}',$this->CarouselSubTitle,$file_contents_string);
+			//not sure what this does:
+			//$file_contents_string = str_replace('<category_url>',$this->Url,$file_contents_string);
+			$file_contents_string = str_replace('{{post_rows}}',$post_rows,$file_contents_string);
+			
 			file_put_contents($this->PostFolder . $globalData->IndexFileName , $file_contents_string);
 		}
 	}

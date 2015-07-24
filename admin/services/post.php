@@ -536,7 +536,7 @@ class Post {
 	{
 		$ret_val = '<div class=col-lg-4>';
 		$ret_val .= '<h3>' . $blogpost->Title . '</h3>';
-		$ret_val .= '<div>' . $blogpost->SubTitle . '</div>';
+		$ret_val .= '<p>' . $blogpost->SubTitle . '</p>';
 		
 		if (isset($blogpost->Blog)) {
 			Post::setpagename($blogpost);

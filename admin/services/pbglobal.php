@@ -60,30 +60,7 @@ class PbGlobal {
 		}
 		
 		$file_contents_string = file_get_contents($this->TemplateFolder . $this->IndexTemplateName);
-		//create create the category carousel
-		$categories = CategoryFactory::GetCategories();
-		$category_carousel_indicators = '';
-		$category_carousel = '';
-		for ($i=0;$i<sizeof($categories);$i++) {
-			$category = $categories[$i];
-			if (CategoryFactory::HasPosts($category->ID)) {
-				$loc = $i+2;
-				$category_carousel_indicators .= '<li data-target="#pbdotcomCarousel" data-slide-to="' . $loc . '" class="" title="' . $category->CarouselTitle . '"></li>';				
-				$category_carousel .= '<div class="item">';
-				$category_carousel .= '<img data-src="holder.js/900x500/auto/#555:' . $category->BackgroundTitleColor . '/text:' . $category->BackgroundTitle . '" alt="Second slide" src="data:image/svg+xml;base64,' . $this->LightCarousel . '">';
-				$category_carousel .= '<div class="container"><div class="carousel-caption">';
-				$category_carousel .= '<h1 style="color:' . $category->Color . '">' . $category->CarouselTitle . '</h1>';
-				$category_carousel .= '<p>' . $category->CarouselSubTitle . '</p>';
-				$category_carousel .= '<p><a class="btn btn-lg btn-primary" href="' . $category->Url . '" role="button">Go to my blog &raquo;</a></p>';
-				$category_carousel .= '</div></div></div>';
-			}
-		}
-		$file_contents_string = str_replace("<category_carousel_indicators>",$category_carousel_indicators,$file_contents_string);
-		$file_contents_string = str_replace("<category_carousel>",$category_carousel,$file_contents_string);
-		
-		$file_contents_string = str_replace("<headline-placeholders>",$post_rows,$file_contents_string);
-		$category_dropdown = Category::getcategorydropdown();
-		$file_contents_string = str_replace('<category-dropdown>',$category_dropdown,$file_contents_string);
+		$file_contents_string = str_replace('{{post_rows}}',$post_rows,$file_contents_string);
 		file_put_contents($this->IndexFolder . $this->IndexFileName , $file_contents_string);
 	}
 	function __toString() {

@@ -10,9 +10,10 @@
 angular.module('peterbdotin').controller('blogCtrl', function ($rootScope, $scope, serverFactory,util) {
   $scope.selectedBlogId = 0;
   $scope.showdirtyalert = false;
-  $scope.mode = 'readonly';
   $scope.ckeditorIsReady = true;
   $scope.BlogIsDirty = false;
+  
+  $scope.ServerResponse = {Message:'Server messages will display here.',Type:''};
 
   $scope.setSelectedBlogId = function (selectedBlogId) {
     var goAhead = false;
@@ -25,7 +26,6 @@ angular.module('peterbdotin').controller('blogCtrl', function ($rootScope, $scop
     }
     if (goAhead) {
       $scope.selectedBlogId = selectedBlogId;
-      $scope.mode = 'readonly';
     }
   }
   

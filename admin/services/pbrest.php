@@ -171,6 +171,7 @@
 		}
 		MySQLConnection::Close($GLOBALS['mysqli']);
 		$ret_val['success'] = 1;
+		$ret_val['message'] = "Post published successfully";
 		echo json_encode($ret_val);
 	});
 	$app->post('/setreadyforpublish/',function() use ($app){
